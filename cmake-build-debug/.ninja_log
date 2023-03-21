@@ -1,0 +1,5 @@
+# ninja log v5
+24	1992	7011045590143488	external/crosswindow/CMakeFiles/CrossWindow.dir/src/CrossWindow/Common/Dialogs.cpp.obj	a45781c1385e3386
+1	2196	7011045592027391	external/crosswindow/CMakeFiles/CrossWindow.dir/src/CrossWindow/Common/Event.cpp.obj	a6f1bb4b551f1d39
+52	5079	7011045621519302	external/crosswindow/CMakeFiles/CrossWindow.dir/src/CrossWindow/Common/Init.cpp.obj	5d1de5abe16f2e64
+33	7108	7011045641900845	external/crosswindow/CMakeFiles/CrossWindow.dir/src/CrossWindow/Win32/Win32Dialogs.cpp.obj	c2766917f0a5dabd
