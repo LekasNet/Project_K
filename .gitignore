@@ -1,0 +1,4 @@
+/Resources/
+*.rar
+/cmake-build-debug/
+/.idea/
