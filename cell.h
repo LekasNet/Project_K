@@ -14,14 +14,17 @@ private:
     SDL_Surface *bmp;
     SDL_Texture *texture;
     SDL_Renderer *render;
-    int pos_x, pos_y;
+    int pos_x, pos_y, rotate=0;
+    bool unique = false;
 public:
     Cell();
-    Cell(int _pos_x, int _pos_y, SDL_Renderer *_render, SDL_Texture *_texture);
+    Cell(int _pos_x, int _pos_y, SDL_Renderer *_render, SDL_Texture *_texture, int _rotate);
     Cell(int _pos_x, int _pos_y, SDL_Renderer *_render, string _place);
     tuple<int, int> position();
     SDL_Texture* LoadTexture();
     SDL_Texture* LoadTexture(SDL_Renderer *_render, string _place);
+    SDL_Texture* ReturnTexture();
+    int rotation();
 
 };
 

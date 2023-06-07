@@ -6,6 +6,6 @@ include_directories(${SDL2_INCLUDE_DIR})
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(Project_K main.cpp field.cpp)
+add_executable(Project_K main.cpp field.cpp shower.h rules.cpp rules.h)
 
 target_link_libraries(Project_K ${SDL2_LIBRARY} -lmingw32 -lSDL2main -lSDL2 -mwindows)

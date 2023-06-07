@@ -4,6 +4,7 @@
 
 #include "field.h"
 #include "cell.h"
+#include "shower.h"
 #include "SDL.h"
 #include "iostream"
 
@@ -44,8 +45,8 @@ Cell::Cell() {
     bmp = SDL_LoadBMP(place.c_str());
 }
 
-Cell::Cell(int _pos_x, int _pos_y, SDL_Renderer *_render, SDL_Texture *_texture) {
-    pos_x = _pos_x; pos_y = _pos_y;
+Cell::Cell(int _pos_x, int _pos_y, SDL_Renderer *_render, SDL_Texture *_texture, int _rotate) {
+    pos_x = _pos_x; pos_y = _pos_y; rotate = _rotate;
     bmp = nullptr;
     texture = _texture;
     render = _render;
@@ -75,7 +76,12 @@ SDL_Texture * Cell::LoadTexture() {
         SDL_FreeSurface(bmp);
     }
     else
+        cout << 0 << endl;
         cout << SDL_GetError() << endl;
+    return texture;
+}
+
+SDL_Texture* Cell::ReturnTexture() {
     return texture;
 }
 
@@ -91,5 +97,31 @@ SDL_Texture * Cell::LoadTexture(SDL_Renderer *_render, string _place) {
     }
     else
         cout << SDL_GetError() << endl;
+    return texture;
+}
+
+int Cell::rotation() {
+    return rotate*90;
+}
+
+void Shower::rotating(int degree) {
+    rotate = degree;
+}
+
+Shower::Shower(SDL_Renderer *_render, SDL_Texture *_texture, int _rotate) {
+    rotate = _rotate;
+    bmp = nullptr;
+    texture = _texture;
+    render = _render;
+}
+
+SDL_Texture * Shower::LoadTexture() {
+    if (bmp != nullptr){
+        texture = SDL_CreateTextureFromSurface(render, bmp);
+        SDL_FreeSurface(bmp);
+    }
+    else
+        cout << 0 << endl;
+    cout << SDL_GetError() << endl;
     return texture;
 }

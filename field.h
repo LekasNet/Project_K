@@ -15,6 +15,7 @@ using namespace std;
 class Field {
 private:
     int weight, height, phase, delimiter;
+
     vector<Cell> matrix;
 public:
     Field();

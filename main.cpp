@@ -3,10 +3,21 @@
 #include "time.h"
 #include "field.h"
 #include "cell.h"
+#include "shower.h"
 #include "vector"
 #include "map"
 
+
 using namespace std;
+
+
+void showing(Shower *next, SDL_Rect rect, SDL_Renderer *renderer){
+    SDL_Texture *texture = next->LoadTexture();
+    SDL_QueryTexture(texture, nullptr, nullptr, &rect.w, &rect.h);
+    SDL_RendererFlip flip = SDL_FLIP_NONE;
+    SDL_RenderCopyEx(renderer, texture, nullptr, &rect, next->rotation(), nullptr, flip);
+    SDL_RenderPresent(renderer);
+}
 
 
 vector<SDL_Texture*>  rendering(SDL_Renderer *render, vector<SDL_Texture*> textures) {
@@ -26,7 +37,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    SDL_Window* window = SDL_CreateWindow("Drawing squares", SDL_WINDOWPOS_CENTERED,
+    SDL_Window* window = SDL_CreateWindow("Karcassone (Demo)", SDL_WINDOWPOS_CENTERED,
                                           SDL_WINDOWPOS_CENTERED, 2560, 1600, SDL_WINDOW_SHOWN);
     SDL_SetWindowFullscreen(window, 0);
     if (window == nullptr) {
@@ -42,22 +53,31 @@ int main(int argc, char* argv[]) {
         SDL_Quit();
         return 1;
     }
-    Field *field = new Field();
+
     vector<SDL_Texture*> textures;
+
     textures = rendering(renderer, textures);
-    cout << 0 << endl;
     for(auto i : textures){
         cout << i << endl;
     }
+
     vector<vector<int>>field_color;
     srand(time(nullptr));
+
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
 
+    Field *field = new Field();
+    Shower *next = new Shower(renderer,
+                              textures[rand()%3 + 1],
+                              0);
+    SDL_Rect new_rect{100, 1200, 300, 300};
+    showing(next, new_rect, renderer);
+
     bool quit = false;
     SDL_Event event;
-    int x, y, w, h, x_drag, y_drag, vec_x=0, vec_y=0;
+    int x, y, w, h, x_drag, y_drag, vec_x=0, vec_y=0, rotate=0;
 
     while (!quit) {
         while (SDL_PollEvent(&event)) {
@@ -70,7 +90,18 @@ int main(int argc, char* argv[]) {
                         case SDLK_ESCAPE:
                             quit = true;
                             break;
+                        case SDLK_r:
+                            rotate = (rotate + 1) % 4;
+                            next->rotating(rotate);
+                            showing(next, new_rect, renderer);
+                            break;
+                        case SDLK_q:
+                            rotate = (rotate - 1) % 4;
+                            next->rotating(rotate);
+                            showing(next, new_rect, renderer);
+                            break;
                     }
+                    break;
                 case SDL_MOUSEBUTTONDOWN:
                     if (event.button.button == SDL_BUTTON_LEFT) {
                         x_drag = event.button.x;
@@ -83,20 +114,22 @@ int main(int argc, char* argv[]) {
                         y = event.button.y;
                         if (x_drag == x and y_drag == y) {
                             SDL_Rect rect{x - x % 300, y - y % 300, 300, 300};
-                            string place;
                             srand(time(nullptr));
                             Cell *cell = new Cell(x - x % field->call(),
                                                   y - y % field->call(),
                                                   renderer,
-                                                  textures[::rand()%4]);
-                            cout << 8 << endl;
+                                                  next->WT(),
+                                                  rotate);
+                            rotate = 0;
+                            next->rotating(rotate);
                             field->add_cell(*cell);
-                            cout << 9 << endl;
                             SDL_Texture *texture = cell->LoadTexture();
-                            cout << 10 << endl;
                             SDL_QueryTexture(texture, nullptr, nullptr, &rect.w, &rect.h);
-                            SDL_RenderCopy(renderer, texture, nullptr, &rect);
+                            SDL_RendererFlip flip = SDL_FLIP_NONE;
+                            SDL_RenderCopyEx(renderer, texture, nullptr, &rect, cell->rotation(), nullptr, flip);
                             SDL_RenderPresent(renderer);
+                            next->new_texture(textures[rand()%3 + 1]);
+                            showing(next, new_rect, renderer);
                         }
 //                        else {
 //                        }
